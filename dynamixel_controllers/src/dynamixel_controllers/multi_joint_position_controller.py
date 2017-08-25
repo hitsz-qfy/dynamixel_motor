@@ -115,7 +115,7 @@ class MultiJointPositionController(MultiJointController):
         if self.joint_speed < self.MIN_VELOCITY: self.joint_speed = self.MIN_VELOCITY
         elif self.joint_speed > self.joint_max_speed: self.joint_speed = self.joint_max_speed
         
-        self.set_speed(self.joint_speed)
+        # self.set_speed(self.joint_speed)
         
         return True
 
@@ -225,7 +225,8 @@ class MultiJointPositionController(MultiJointController):
     def process_command(self, msg):
         motor_name = self.motor_id
         angle = [self.pos_rad_to_raw(position) for position in  msg.joint_positions]
+        speed = [self.spd_rad_to_raw(speed) for speed in msg.joint_speed]
         # rospy.loginfo(angle)
         # angle = msg.data
-        mcv = zip(motor_name, angle)
-        self.dxl_io.set_multi_position(mcv)
+        mcv = zip(motor_name, angle, speed)
+        self.dxl_io.set_multi_position_and_speed(mcv)
